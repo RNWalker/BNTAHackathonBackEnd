@@ -1,10 +1,14 @@
 package com.hackathon.mind_mentor.services;
 
 import com.hackathon.mind_mentor.models.Chat;
+import com.hackathon.mind_mentor.models.User;
 import com.hackathon.mind_mentor.repositories.ChatRepository;
+import com.hackathon.mind_mentor.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +17,9 @@ public class ChatService {
 
     @Autowired
     ChatRepository chatRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public List<Chat> findAllChats() {
         return chatRepository.findAll();
@@ -28,7 +35,14 @@ public class ChatService {
         return chatRepository.findByUserId(userId);
     }
 
-    public Chat createChat(Long userId) {
-        Chat chat = new Chat()
+    public Chat createChat(Long userId, LocalDate date) {
+        User user = userRepository.findById(userId).get();
+        Chat chat = new Chat(date, user);
+        return chatRepository.save(chat);
+    }
+
+    public void deleteChat(Long id) {
+        chatRepository
+
     }
 }

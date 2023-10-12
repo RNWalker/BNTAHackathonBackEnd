@@ -3,10 +3,12 @@ package com.hackathon.mind_mentor.controllers;
 import com.hackathon.mind_mentor.models.Chat;
 import com.hackathon.mind_mentor.services.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,14 +43,15 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<Chat> createChat(@RequestParam (required = true, name = "userId") Long userId) {
-        Chat chat = chatService.createChat(userId);
+    public ResponseEntity<Chat> createChat(@RequestParam (required = true, name = "userId") Long userId, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    LocalDate date) {
+        Chat chat = chatService.createChat(userId, date);
         return new ResponseEntity<>(chat, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Chat> deleteChat(@PathVariable Long id) {
-        Chat chat = chatService.deleteChat(id);
-        return new ResponseEntity<>(chat, HttpStatus.OK);
+        chatService.deleteChat(id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

@@ -28,7 +28,7 @@ public class Chat {
     @JsonIgnoreProperties({"chat"})
     private List<Message> messages;
 
-    public Chat(LocalDate date, User user, List<Message> messages){
+    public Chat(LocalDate date, User user){
         this.date = date;
         this.user = user;
         this.messages = new ArrayList<>();
