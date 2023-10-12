@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "messages")
@@ -20,12 +21,12 @@ public class Message {
     private Chat chat;
 
     @Column
-    private LocalDate dateTime;
+    private LocalDateTime dateTime;
 
     @Column
     private boolean isBot;
 
-    public Message(Chat chat, LocalDate dateTime, boolean isBot){
+    public Message(Chat chat, LocalDateTime dateTime, boolean isBot){
         this.chat = chat;
         this.dateTime = dateTime;
         this.isBot = isBot;
@@ -55,16 +56,6 @@ public class Message {
     }
 
     public
-    LocalDate getDateTime(){
-        return dateTime;
-    }
-
-    public
-    void setDateTime(LocalDate dateTime){
-        this.dateTime = dateTime;
-    }
-
-    public
     boolean isBot(){
         return isBot;
     }
@@ -72,5 +63,15 @@ public class Message {
     public
     void setBot(boolean bot){
         isBot = bot;
+    }
+
+    public
+    LocalDateTime getDateTime(){
+        return dateTime;
+    }
+
+    public
+    void setDateTime(LocalDateTime dateTime){
+        this.dateTime = dateTime;
     }
 }
