@@ -1,5 +1,6 @@
 package com.hackathon.mind_mentor.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -13,7 +14,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "chat_id")
+    @JsonIgnoreProperties({"messages"})
     private Chat chat;
 
     @Column

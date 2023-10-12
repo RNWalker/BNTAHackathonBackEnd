@@ -1,5 +1,6 @@
 package com.hackathon.mind_mentor.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -18,10 +19,13 @@ public class Chat {
     @Column
     private LocalDate date;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"chats"})
     private User user;
 
-    @Column
+    @OneToMany (mappedBy = "chat")
+    @JsonIgnoreProperties({"chat"})
     private List<Message> messages;
 
     public Chat(LocalDate date, User user, List<Message> messages){

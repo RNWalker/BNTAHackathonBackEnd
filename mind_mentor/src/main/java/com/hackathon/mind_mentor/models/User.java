@@ -1,6 +1,8 @@
 package com.hackathon.mind_mentor.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -27,7 +29,8 @@ public class User {
     @Column
     private String phoneNumber;
 
-    @Column
+    @OneToMany (mappedBy = "user")
+    @JsonIgnoreProperties({"user"})
     private List<Chat> chats;
 
     public User(String firstName, String lastName, String email, String phoneNumber, List<Chat> chats){
