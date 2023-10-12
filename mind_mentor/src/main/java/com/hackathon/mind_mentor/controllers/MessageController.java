@@ -7,10 +7,7 @@ import com.hackathon.mind_mentor.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -26,11 +23,11 @@ public class MessageController {
     ChatService chatService;
 
     @PostMapping
-    public ResponseEntity<Message> createMessage (@RequestParam Long chatId){
+    public ResponseEntity<Message> createMessage (@RequestParam Long chatId, @RequestBody String text){
         Optional<Chat> chat = chatService.findChatById(chatId);
 
         if (chat.isPresent()) {
-            Message message = messageService.createMessage(chat.get(), LocalDateTime.now(), false);
+            Message message = messageService.createMessage(chat.get(), LocalDateTime.now(), false,text);
             return new ResponseEntity<>(message, HttpStatus.CREATED);
         }
 

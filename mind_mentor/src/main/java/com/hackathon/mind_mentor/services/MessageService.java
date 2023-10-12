@@ -13,8 +13,8 @@ public class MessageService {
     @Autowired
     MessageRepository messageRepository;
     public
-    Message createMessage(Chat chat, LocalDateTime now, boolean b){
-        Message message = new Message(chat,now,b);
+    Message createMessage(Chat chat, LocalDateTime now, boolean b, String text){
+        Message message = new Message(chat,now,b,text);
         return messageRepository.save(message);
     }
 }

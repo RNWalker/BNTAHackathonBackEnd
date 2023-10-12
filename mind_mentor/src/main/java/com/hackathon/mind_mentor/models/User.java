@@ -33,7 +33,7 @@ public class User {
     @JsonIgnoreProperties({"user"})
     private List<Chat> chats;
 
-    public User(String firstName, String lastName, String email, String phoneNumber, List<Chat> chats){
+    public User(String firstName, String lastName, String email, String phoneNumber){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

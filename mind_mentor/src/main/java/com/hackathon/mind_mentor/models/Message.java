@@ -26,10 +26,14 @@ public class Message {
     @Column
     private boolean isBot;
 
-    public Message(Chat chat, LocalDateTime dateTime, boolean isBot){
+    @Column
+    private String message;
+
+    public Message(Chat chat, LocalDateTime dateTime, boolean isBot, String message){
         this.chat = chat;
         this.dateTime = dateTime;
         this.isBot = isBot;
+        this.message = message;
     }
 
     public Message(){
@@ -73,5 +77,15 @@ public class Message {
     public
     void setDateTime(LocalDateTime dateTime){
         this.dateTime = dateTime;
+    }
+
+    public
+    String getMessage(){
+        return message;
+    }
+
+    public
+    void setMessage(String message){
+        this.message = message;
     }
 }
