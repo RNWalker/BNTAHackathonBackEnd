@@ -3,6 +3,7 @@ package com.hackathon.mind_mentor.services;
 import com.hackathon.mind_mentor.models.Chat;
 import com.hackathon.mind_mentor.models.User;
 import com.hackathon.mind_mentor.repositories.ChatRepository;
+import com.hackathon.mind_mentor.repositories.MessageRepository;
 import com.hackathon.mind_mentor.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ public class ChatService {
 
     @Autowired
     ChatRepository chatRepository;
+    @Autowired
+    MessageRepository messageRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -42,7 +45,7 @@ public class ChatService {
     }
 
     public void deleteChat(Long id) {
-        chatRepository
-
+        messageRepository.deleteByChatId(id);
+        chatRepository.deleteById(id);
     }
 }

@@ -19,7 +19,7 @@ public class ChatController {
     @Autowired
     ChatService chatService;
 
-    @GetMapping
+    @GetMapping(value = "/all")
     public ResponseEntity<List<Chat>> getAllChats() {
         List<Chat> allChats = chatService.findAllChats();
         return new ResponseEntity<>(allChats, HttpStatus.FOUND);
@@ -43,9 +43,8 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<Chat> createChat(@RequestParam (required = true, name = "userId") Long userId, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    LocalDate date) {
-        Chat chat = chatService.createChat(userId, date);
+    public ResponseEntity<Chat> createChat(@RequestParam (required = true, name = "userId") Long userId) {
+        Chat chat = chatService.createChat(userId, LocalDate.now());
         return new ResponseEntity<>(chat, HttpStatus.CREATED);
     }
 
