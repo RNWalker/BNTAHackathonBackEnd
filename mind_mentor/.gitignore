@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 .DS_Store
+api_key.txt
 
 ### STS ###
 .apt_generated
