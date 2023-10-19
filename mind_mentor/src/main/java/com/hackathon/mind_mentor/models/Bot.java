@@ -37,11 +37,13 @@ public class Bot {
             throw new RuntimeException(e);
         }
     }
+
     public static String extractMessageFromJSONResponse(String response) {
         int start = response.indexOf("content") + 11;
         int end = response.indexOf("\"", start);
         return response.substring(start, end);
     }
+
     public static String readApiKeyFromFile(String filePath) {
         try {
             Scanner scanner = new Scanner(new File(filePath));
@@ -54,12 +56,25 @@ public class Bot {
             throw new RuntimeException("Error reading API key from file: " + e.getMessage());
         }
     }
+
     public static String getPrompt() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
+
     public static void main(String[] args) {
         System.out.println("How can I help you today?");
         System.out.println(getGPTResponse(getPrompt()));
+
+        while (true) {
+            String userResponse = getPrompt(); // Prompt for user input
+            if (userResponse.equalsIgnoreCase("end")) {
+                break; // Exit the loop if the user says "end"
+            }
+
+            String botResponse = getGPTResponse(userResponse);
+            System.out.println(botResponse);
+
+        }
     }
 }
