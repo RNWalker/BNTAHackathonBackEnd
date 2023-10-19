@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+.DS_Store
+
 ### STS ###
 .apt_generated
 .classpath
@@ -31,3 +33,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+src/main/java/com/hackathon/mind_mentor/key/api_key.txt
+api_key.txt
+.api_key.txt
+./api_key.txt
