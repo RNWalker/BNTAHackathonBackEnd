@@ -17,7 +17,6 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "chat_id")
-    @JsonIgnoreProperties({"messages"})
     private Chat chat;
 
     @Column

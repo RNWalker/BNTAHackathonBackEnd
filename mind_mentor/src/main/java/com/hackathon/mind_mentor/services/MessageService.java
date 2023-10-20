@@ -12,9 +12,8 @@ public class MessageService {
 
     @Autowired
     MessageRepository messageRepository;
-    public
-    Message createMessage(Chat chat, LocalDateTime now, boolean b, String text){
-        Message message = new Message(chat,now,b,text);
+    public Message createMessage(Chat chat, LocalDateTime dateTime, boolean isBot, String text){
+        Message message = new Message(chat,dateTime, isBot, text);
         return messageRepository.save(message);
     }
 }

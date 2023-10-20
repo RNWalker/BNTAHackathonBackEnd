@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +25,7 @@ public class Chat {
     @JsonIgnoreProperties({"chats"})
     private User user;
 
-    @OneToMany (mappedBy = "chat")
-    @JsonIgnoreProperties({"chat"})
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<Message> messages;
 
     public Chat(LocalDate date, User user){
@@ -77,4 +77,11 @@ public class Chat {
     void setMessages(List<Message> messages){
         this.messages = messages;
     }
+
+    // Add a method to add a message to the chat
+    public void addMessage(Message message) {
+        messages.add(message);
+        message.setChat(this);
+    }
+
 }
