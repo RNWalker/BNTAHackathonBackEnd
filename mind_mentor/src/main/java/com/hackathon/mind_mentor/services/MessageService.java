@@ -71,7 +71,8 @@ public class MessageService {
     }
     public Message createMessage(Chat chat, LocalDateTime now, boolean b, String text){
         Message message = new Message(chat,now,b,text);
-        Message botMessage = new Message(chat,now,true, getGPTResponse(text));
+        String modText = "In less than 200 characters, give me a response to :" + text;
+        Message botMessage = new Message(chat,now,true, getGPTResponse(modText));
         messageRepository.save(message);
         messageRepository.save(botMessage);
         return message;
