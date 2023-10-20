@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,6 +22,22 @@ public class MessageService {
 
 //    @Autowired
 //    BotService botService;
+
+    private static List<MessageOutput> conversationHistory = new ArrayList<>();
+
+    private static class MessageOutput {
+        private String role;
+        private String content;
+
+        public MessageOutput(String role, String content) {
+            this.role = role;
+            this.content = content;
+        }
+
+        public String toJson() {
+            return "{\"role\": \"" + role + "\", \"content\": \"" + content + "\"}";
+        }
+    }
 
     public Message createMessage(Chat chat, LocalDateTime now, boolean b, String text){
         Message message = new Message(chat,now,b,text);
@@ -35,20 +52,30 @@ public class MessageService {
         return messageRepository.findByChatId(chatId);
     }
 
-    public String generateMessageBody(){
+    public void generateMessageBody(){
         List<Message> conversationMessages = getAllMessages(1);
-        String newBody = "";
 
-        for (int i = 0; i < conversationMessages.size() ; i++ ){
-            if(conversationMessages.get(i).isBot()){
+        for (int i = 0; i < conversationMessages.size() ; i++ ) {
+            if (conversationMessages.get(i).isBot()) {
                 String prompt = conversationMessages.get(i).getMessage();
-                newBody += "\"role\": \"assistant\", \"content\": \"" + prompt + "\"";
-            } else if(!conversationMessages.get(i).isBot()){
+                conversationHistory.add(new MessageOutput("assistant", prompt));
+            } else if (!conversationMessages.get(i).isBot()) {
                 String prompt = conversationMessages.get(i).getMessage();
-                newBody += "\"role\": \"user\", \"content\": \"" + prompt + "\"";
+                conversationHistory.add(new MessageOutput("user", prompt));
             }
         }
-        return newBody;
+    }
+
+    private static String messagesToJson(List<MessageOutput> messages) {
+        StringBuilder json = new StringBuilder("[");
+        for (MessageOutput message : messages) {
+            if (json.length() > 1) {
+                json.append(", ");
+            }
+            json.append(message.toJson());
+        }
+        json.append("]");
+        return json.toString();
     }
 
     public String getGPTResponse(String prompt) {
@@ -64,9 +91,11 @@ public class MessageService {
             connection.setRequestProperty("Authorization", "Bearer " + apiKey);
             connection.setRequestProperty("Content-Type", "application/json");
             // The request body
-            String messageBody = generateMessageBody();
-            String body = "{\"model\": \"" + model + "\", \"messages\": [" + messageBody +"]}";
-//            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+            generateMessageBody();
+            conversationHistory.add(new MessageOutput("user", prompt));
+//            String body = "{\"model\": \"" + model + "\", \"messages\": [\""+ messageBody +"\"{\"role\": \"user\", \"content\": \"" + prompt + "\"]}}";
+//            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}"; //without context
+            String body = "{\"model\": \"" + model + "\", \"messages\": " + messagesToJson(conversationHistory) + "}";
             connection.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write(body);
