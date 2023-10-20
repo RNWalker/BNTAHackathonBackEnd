@@ -6,11 +6,11 @@ import com.hackathon.mind_mentor.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 @Service
@@ -19,7 +19,39 @@ public class MessageService {
     @Autowired
     MessageRepository messageRepository;
 
-    public static String getGPTResponse(String prompt) {
+//    @Autowired
+//    BotService botService;
+
+    public Message createMessage(Chat chat, LocalDateTime now, boolean b, String text){
+        Message message = new Message(chat,now,b,text);
+        String modText = "In less than 200 characters, give me a response to :" + text;
+        Message botMessage = new Message(chat,now,true, getGPTResponse(modText));
+        messageRepository.save(message);
+        messageRepository.save(botMessage);
+        return message;
+    }
+
+    public List<Message> getAllMessages(int chatId){
+        return messageRepository.findByChatId(chatId);
+    }
+
+    public String generateMessageBody(){
+        List<Message> conversationMessages = getAllMessages(1);
+        String newBody = "";
+
+        for (int i = 0; i < conversationMessages.size() ; i++ ){
+            if(conversationMessages.get(i).isBot()){
+                String prompt = conversationMessages.get(i).getMessage();
+                newBody += "\"role\": \"assistant\", \"content\": \"" + prompt + "\"";
+            } else if(!conversationMessages.get(i).isBot()){
+                String prompt = conversationMessages.get(i).getMessage();
+                newBody += "\"role\": \"user\", \"content\": \"" + prompt + "\"";
+            }
+        }
+        return newBody;
+    }
+
+    public String getGPTResponse(String prompt) {
         String url = "https://api.openai.com/v1/chat/completions";
         String apiKeyPath = "src/main/java/com/hackathon/mind_mentor/key/api_key.txt";
         String apiKey = readApiKeyFromFile(apiKeyPath); // Read API key from the specified path
@@ -32,7 +64,9 @@ public class MessageService {
             connection.setRequestProperty("Authorization", "Bearer " + apiKey);
             connection.setRequestProperty("Content-Type", "application/json");
             // The request body
-            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+            String messageBody = generateMessageBody();
+            String body = "{\"model\": \"" + model + "\", \"messages\": [" + messageBody +"]}";
+//            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
             connection.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write(body);
@@ -68,13 +102,5 @@ public class MessageService {
         } catch (IOException e) {
             throw new RuntimeException("Error reading API key from file: " + e.getMessage());
         }
-    }
-    public Message createMessage(Chat chat, LocalDateTime now, boolean b, String text){
-        Message message = new Message(chat,now,b,text);
-        String modText = "In less than 200 characters, give me a response to :" + text;
-        Message botMessage = new Message(chat,now,true, getGPTResponse(modText));
-        messageRepository.save(message);
-        messageRepository.save(botMessage);
-        return message;
     }
 }
