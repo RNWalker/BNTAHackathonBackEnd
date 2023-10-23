@@ -26,7 +26,8 @@ public class Message {
     @Column
     private boolean isBot;
 
-    @Column
+    @Convert(converter = Encrypt.class)
+    @Column(columnDefinition = "TEXT")
     private String message;
 
     public Message(Chat chat, LocalDateTime dateTime, boolean isBot, String message){
