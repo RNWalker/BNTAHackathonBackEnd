@@ -113,6 +113,5 @@ public class Bot {
         }
         json.append("]");
         return json.toString();
->>>>>>> develop
     }
 }
