@@ -29,9 +29,9 @@ public class DataLoader implements ApplicationRunner {
         userRepository.save(user1);
         Chat chat1 = new Chat(LocalDate.now(),user1);
         chatRepository.save(chat1);
-
-//        Message message1 = new Message(chat1, LocalDateTime.now(), false, "Hello, I need some mental support.");
-//        messageRepository.save(message1);
+        
+        Message message1 = new Message(chat1, LocalDateTime.now(), true, "Hi, I'm Mind Mentor. How can I help you today?");
+        messageRepository.save(message1);
 //
 //        Message message2 = new Message(chat1, LocalDateTime.now(), true, "Hello, John! I'm here to help. How are you feeling?");
 //        messageRepository.save(message2);
